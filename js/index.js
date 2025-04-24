@@ -1,21 +1,32 @@
-let map; // gebruik dit om de map gemakkelijk aan te spreken doorheen de applicatie
+const potty = `https://opendata.bruxelles.be/api/explore/v2.1/catalog/datasets/toilettes_publiques_vbx/records`;
+let map = L.map("map").setView([50.8477, 4.3572], 13);
+
+init();
 
 function init() {
-    // initialise de kaart
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
 
-    // voeg een tile layer toe, met URL https://a.tile.openstreetmap.org/{z}/{x}/{y}.png
-    // vergeet openstreetmap attributie niet
-
-    // gebruik de functie "loadMarkers" om de markers toe te voegen
+  loadMarkers();
 }
 
 function loadMarkers() {
-    // fetch de data van opendata.brussels.be
-    // als er coordinaten beschikbaar zijn, kan je de addMarker functie gebruiken om een marker toe te voegen op de kaart
-
+  fetch(potty + "?limit=100")
+    .then(function (data) {
+      console.log("fetch ok");
+      return data.json();
+    })
+    .catch((error) => console.error(error, "it's fucked"))
+    .then(function (data) {
+      data.results.forEach(function (e) {
+        addMarker(e.geo_point_2d.lat, e.geo_point_2d.lon);
+      });
+    });
 }
 
 function addMarker(lat, lon) {
-    // voeg een marker toe op lat, lon
-
+  let marker = L.marker([lat, lon]).addTo(map);
 }
