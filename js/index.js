@@ -29,4 +29,5 @@ function loadMarkers() {
 
 function addMarker(lat, lon) {
   let marker = L.marker([lat, lon]).addTo(map);
+  marker.bindPopup("location");
 }
